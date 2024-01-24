@@ -1,5 +1,8 @@
 class Account < ApplicationRecord
   belongs_to :user
+
+  validates :savings_account, :investment, :earnings, :stakes, presence: true
+  validates :savings_account, :investment, :earnings, :stakes, numericality: { greater_than_or_equal_to: 0 }
   after_create :set_default_values
 
 private
