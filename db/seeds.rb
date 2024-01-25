@@ -9,7 +9,7 @@
 # Create two users
 user1 = User.create!(
   email: 'user1@example.com',
-  password: 'password_digest',
+  password: 'password1',
   first_name: 'John',
   last_name: 'Doe',
   phone_number: '1234567890',
@@ -22,7 +22,7 @@ user1 = User.create!(
 
 user2 = User.create!(
   email: 'user2@example.com',
-  password: 'password_digest',
+  password: 'password2',
   first_name: 'Jane',
   last_name: 'Doe',
   phone_number: '0987654321',
