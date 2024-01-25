@@ -17,11 +17,10 @@ class Api::V1::AccountsController < ApplicationController
 
 # POST /api/v1/accounts
   def create
-    @account = Account.new(account_params)
-    @account.user = current_user
+    @account = current_user.build_account(account_params)
 
     if @account.save
-      render json: @account, include: [:user], status: :created
+      render json: @account, status: :created
     else
       render json: @account.errors, status: :unprocessable_entity
     end
