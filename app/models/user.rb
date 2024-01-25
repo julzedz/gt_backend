@@ -3,7 +3,13 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable
-
+    
+    has_one :account, validate: true
+    after_create :create_account
+    validates_presence_of :account
+    before_save :set_address
+    before_create :generate_account_number
+    
 # Override password setter method to store plain text password in the database
   def password=(new_password)
     @password = new_password
@@ -20,8 +26,6 @@ class User < ApplicationRecord
     password
   end
 
-  before_save :set_address
-  before_create :generate_account_number
 
   has_one :account
   validates :email, presence: true, uniqueness: true
@@ -43,5 +47,9 @@ class User < ApplicationRecord
 
   def generate_account_number
     self.account_number = rand(1_000_000_000..9_999_999_999)
+  end
+
+  def create_account
+    Account.create(user: self)
   end
 end
