@@ -34,18 +34,18 @@ user2 = User.create!(
 )
 
 # Create accounts for the users
-Account.create!(
-  user_id: user1.id,
-  savings_account: 1000.00,
-  investment: 2000.00,
-  earnings: 300.00,
-  stakes: 400.00
-)
+# Account.create!(
+#   user_id: user1.id,
+#   savings_account: 1000.00,
+#   investment: 2000.00,
+#   earnings: 300.00,
+#   stakes: 400.00
+# )
 
-Account.create!(
-  user_id: user2.id,
-  savings_account: 2000.00,
-  investment: 3000.00,
-  earnings: 400.00,
-  stakes: 500.00
-)
+# Account.create!(
+#   user_id: user2.id,
+#   savings_account: 2000.00,
+#   investment: 3000.00,
+#   earnings: 400.00,
+#   stakes: 500.00
+# )

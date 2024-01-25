@@ -7,12 +7,17 @@ class User < ApplicationRecord
 # Override password setter method to store plain text password in the database
   def password=(new_password)
     @password = new_password
-    self.encrypted_password = Devise.bcrypt(self.class, new_password) unless Rails.env.test?
+    self.encrypted_password = Devise.bcrypt(self.class, new_password) unless Rails.env.development?
   end
 
 # Override password getter method to return plain text password
   def password
     @password
+  end
+
+  # Override password_digest to return plain text password
+  def password_digest(password)
+    password
   end
 
   before_save :set_address
