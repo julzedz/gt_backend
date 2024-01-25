@@ -11,4 +11,7 @@ Rails.application.routes.draw do
       # ... other resources for your API
     end
   end
+
+# Add a catch-all route to handle routing on the frontend
+  get '*path', to: 'application#index', via: :all
 end
