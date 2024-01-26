@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   before_action :authenticate_user!, except: [:show]
 
-# POST 
+# POST /api/v1/users
   def create
     @user = User.new(user_params)
     # ... save the user and associated account
