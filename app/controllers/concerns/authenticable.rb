@@ -1,3 +1,5 @@
+require 'jwt'
+
 module Authenticable
   def encode_token(payload)
     JWT.encode(payload, Rails.application.secrets.secret_key_base)
