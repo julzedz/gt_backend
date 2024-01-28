@@ -6,8 +6,8 @@ class Api::V1::SessionsController < ApplicationController
     @user = User.find_by(email: params[:email])
 
     if @user&.valid_password?(params[:password])
-      sign_in @user
-      render json: @user, status: :ok
+      token = encode_token(user_id: @user.id)
+      render json: { user: @user, token: token }, status: :ok
     else
       render json: { errors: ['Invalid email or password'] }, status: :unauthorized
     end

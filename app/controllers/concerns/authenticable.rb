@@ -1,4 +1,8 @@
 module Authenticable
+  def encode_token(payload)
+    JWT.encode(payload, Rails.application.secrets.secret_key_base)
+  end
+
   def current_user
     @current_user ||= User.find_by(id: decoded_auth_token[:user_id]) if decoded_auth_token
   end
@@ -8,7 +12,7 @@ module Authenticable
   end
 
   def decoded_auth_token
-    @decoded_auth_token ||= JsonWebToken.decode(http_token)
+    @decoded_auth_token ||= JWT.decode(http_token, Rails.application.secrets.secret_key_base).first
   end
 
   def http_token

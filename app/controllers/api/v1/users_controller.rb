@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :authenticate_user!, except: [:show, :show_current, :create]
+  before_action :authenticate_with_token!, except: [ :create]
 
 # POST /api/v1/users
   def create

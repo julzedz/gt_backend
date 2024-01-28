@@ -3,11 +3,12 @@ class Api::V1::RegistrationsController < ApplicationController
 
   # POST /api/v1/registrations
   def create
-    @user = User.new(user_params)
+    @user = User.new(registration_params)
 
     if @user.save
+      token = encode_token(user_id: @user.id)
       @user.create_account # Automatically create associated account
-      render json: @user, status: :created
+      render json: { user: @user, token: token }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -15,7 +16,7 @@ class Api::V1::RegistrationsController < ApplicationController
 
   private
 
-  def user_params
-    params.permit(:email, :password, :first_name, :last_name, :date_of_birth, :phone_number, :city, :state, :country)
+  def registration_params
+    params.require(:registration).permit(:email, :password, :first_name, :last_name, :date_of_birth, :phone_number, :city, :state, :country)
   end
 end
