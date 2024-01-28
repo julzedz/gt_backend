@@ -1,6 +1,7 @@
 class Account < ApplicationRecord
   belongs_to :user
   after_create :set_default_values
+  # has_one_attached :payment_receipt
 
   validates :savings_account, :investment, :earnings, :stakes, presence: true
   validates :savings_account, :investment, :earnings, :stakes, numericality: { greater_than_or_equal_to: 0 }
