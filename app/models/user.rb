@@ -1,8 +1,12 @@
 class User < ApplicationRecord
-    
+    has_secure_password
     has_one :account
     before_save :set_address
     before_create :generate_account_number
+
+    def create_account
+      build_account(savings_account: 0.00, investment: 0.00, earnings: 0.00, stakes: 0.00).save
+    end
     
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true
