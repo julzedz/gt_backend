@@ -1,5 +1,10 @@
 class Api::V1::UsersController < ApplicationController
+include Authenticable
   before_action :authenticate_with_token!, except: [ :create]
+
+  rescue_from 'Not authenticated' do |exception|
+    render json: { errors: [exception.message] }, status: :unauthorized
+  end
 
 # POST /api/v1/users
   def create
@@ -27,7 +32,7 @@ class Api::V1::UsersController < ApplicationController
 
 # GET /api/v1/users/:id
   def show
-    @user = User.find(params[:id])
+    @user ||= User.find_by(id: decoded_auth_token['user_id'].to_i) if decoded_auth_token
 
     # Adjust fields based on access control/visibility preferences
     render json: @user, include: :account, only: [:email, :phone_number, :first_name, :last_name, :password, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]

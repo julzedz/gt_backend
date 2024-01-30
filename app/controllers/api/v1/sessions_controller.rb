@@ -15,7 +15,6 @@ class Api::V1::SessionsController < ApplicationController
 
     # DELETE /api/v1/sessions
   def destroy
-    sign_out
-    head :no_content
+    render json: { message: 'Logged out' }, status: :ok
   end
 end
