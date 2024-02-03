@@ -27,6 +27,7 @@ module Authenticable
   def http_token
     @http_token ||= if request.headers['Authorization'].present?
       token = request.headers['Authorization'].split(' ').last
+      token
     end
   end
 end
