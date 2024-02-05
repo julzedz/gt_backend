@@ -1,6 +1,7 @@
 class Api::V1::UsersController < ApplicationController
-include Authenticable
-  before_action :authenticate_with_token!, except: [ :create]
+  include JsonWebToken
+  # before_action :authenticate_with_token!, except: [ :create]
+  before_action :authenticate_request, except: [ :create, :show]
 
   rescue_from 'Not authenticated' do |exception|
     render json: { errors: [exception.message] }, status: :unauthorized
@@ -12,35 +13,40 @@ include Authenticable
     # ... save the user and associated account
     if @user.save
       @user.create_account # Automatically create associated account
-      render json: @user, status: :created
+      token = JsonWebToken.encode(user_id: @user.id)
+      time = Time.now + 7.days.to_i
+      render json: { token: token, exp: time.strftime('%m-%d-%Y %H:%M'), user: @user, include: :account }, status: :ok
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
-  def index
-    @users = User.all
-  end
-
-
   # GET /api/v1/users/me
   def show_current
-    @user = current_user
-
-    render json: @user, include: :account, status: :okay, only: [:email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+    # authenticate_request
+    @user = User.find(params[:id])
+    render json: @user, include: :account, status: :ok, only: [:email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
   end
 
-# GET /api/v1/users/:id
+# # GET /api/v1/users/:id
   def show
-    @user ||= User.find_by(id: decoded_auth_token['user_id'].to_i) if decoded_auth_token
-
-    # Adjust fields based on access control/visibility preferences
-    render json: @user, include: :account, only: [:email, :phone_number, :first_name, :last_name, :password, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+    # authenticate_request
+    @user = User.find(params[:id])
+    render json: @user, include: :account, status: :ok, only: [:email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
   end
 
 private
 
   def user_params
     params.permit(:email, :password_confirmation, :password, :phone_number, :first_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at)
+  end
+
+  def authenticate_request
+    result = JsonWebToken.authenticate_request(request)
+    if result[:errors]
+      render json: { errors: result[:errors] }, status: result[:status]
+    else
+      @decoded = result
+    end
   end
 end
