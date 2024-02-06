@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   include JsonWebToken
   # before_action :authenticate_with_token!, except: [ :create]
-  before_action :authenticate_request, except: [ :create, :show]
+  before_action :authenticate_request, except: [ :create ]
 
   rescue_from 'Not authenticated' do |exception|
     render json: { errors: [exception.message] }, status: :unauthorized
@@ -23,16 +23,24 @@ class Api::V1::UsersController < ApplicationController
 
   # GET /api/v1/users/me
   def show_current
-    # authenticate_request
-    @user = User.find(params[:id])
-    render json: @user, include: :account, status: :ok, only: [:email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+    authenticate_request
+    if @decoded[:user_id]
+      @user = User.find(@decoded[:user_id])
+      render json: @user, include: :account, status: :ok, only: [:email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+    else
+      render json: { error: 'Not authenticated' }, status: :unauthorized
+    end
   end
 
 # # GET /api/v1/users/:id
   def show
-    # authenticate_request
-    @user = User.find(params[:id])
-    render json: @user, include: :account, status: :ok, only: [:email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+    authenticate_request
+    if @decoded[:user_id]
+      @user = User.find(@decoded[:user_id])
+      render json: @user, include: :account, status: :ok, only: [:email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+    else
+      render json: { error: 'Not authenticated' }, status: :unauthorized
+    end
   end
 
 private
@@ -42,7 +50,9 @@ private
   end
 
   def authenticate_request
+    puts "Headers: #{request.headers}"
     result = JsonWebToken.authenticate_request(request)
+    puts "Result: #{result}"
     if result[:errors]
       render json: { errors: result[:errors] }, status: result[:status]
     else
