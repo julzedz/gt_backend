@@ -1,11 +1,8 @@
 class Api::V1::AccountsController < ApplicationController
-  include Authenticable
-  before_action :authenticate_with_token!, except: [:create]
 
 # GET /api/v1/accounts
   def index
     @accounts = current_user.account
-
     render json: @accounts
   end
 
