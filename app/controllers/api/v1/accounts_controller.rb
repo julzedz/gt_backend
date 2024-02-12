@@ -1,11 +1,5 @@
 class Api::V1::AccountsController < ApplicationController
 
-# GET /api/v1/accounts
-  def index
-    @accounts = current_user.account
-    render json: @accounts
-  end
-
 # GET /api/v1/accounts/:id
   def show
     @account = Account.find(params[:id])
