@@ -1,12 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      post 'registrations', to: 'registrations#create'
-      post 'sessions', to: 'sessions#create'
-      delete 'sessions', to: 'sessions#destroy'
-      resources :users do
-        put 'me', to: 'users#update_current', on: :collection
-      end
+      resources :users
       post 'login', to: 'authenticate#login'
       resources :accounts
     end
