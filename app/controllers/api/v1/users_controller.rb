@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   include JsonWebToken
-  before_action :authenticate_request, except: [ :create, :update ]
+  before_action :authenticate_request, except: [ :create, :update_current, :update ]
 
   rescue_from 'Not authenticated' do |exception|
     render json: { errors: [exception.message] }, status: :unauthorized
