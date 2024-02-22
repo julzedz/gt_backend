@@ -1,6 +1,5 @@
 class Api::V1::UsersController < ApplicationController
   include JsonWebToken
-  # before_action :authenticate_with_token!, except: [ :create]
   before_action :authenticate_request, except: [ :create ]
 
   rescue_from 'Not authenticated' do |exception|
@@ -26,7 +25,7 @@ class Api::V1::UsersController < ApplicationController
     authenticate_request
     if @decoded[:user_id]
       @user = User.find(@decoded[:user_id])
-      render json: @user, include: :account, status: :ok, only: [:email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+      render json: @user, include: :account, status: :ok, only: [ :id, :email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
     else
       render json: { error: 'Not authenticated' }, status: :unauthorized
     end
@@ -37,7 +36,22 @@ class Api::V1::UsersController < ApplicationController
     authenticate_request
     if @decoded[:user_id]
       @user = User.find(@decoded[:user_id])
-      render json: @user, include: :account, status: :ok, only: [:email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+      render json: @user, include: :account, status: :ok, only: [:id, :email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+    else
+      render json: { error: 'Not authenticated' }, status: :unauthorized
+    end
+  end
+
+  # PUT /api/v1/users/me
+  def update_current
+    authenticate_request
+    if @decoded[:user_id]
+      @user = User.find(@decoded[:user_id])
+      if @user.update(user_params)
+        render json: @user, include: account, status: :ok, only: [:id, :email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+      else
+        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
     else
       render json: { error: 'Not authenticated' }, status: :unauthorized
     end
@@ -46,7 +60,7 @@ class Api::V1::UsersController < ApplicationController
 private
 
   def user_params
-    params.permit(:email, :password_confirmation, :password, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at)
+    params.permit(:email, :password_confirmation, :password, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :id, :profile_img_path, :address, :fullname, :account_number, :created_at)
   end
 
   def authenticate_request

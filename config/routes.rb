@@ -4,7 +4,9 @@ Rails.application.routes.draw do
       post 'registrations', to: 'registrations#create'
       post 'sessions', to: 'sessions#create'
       delete 'sessions', to: 'sessions#destroy'
-      resources :users
+      resources :users do
+        put 'me', to: 'users#update_current', on: :collection
+      end
       post 'login', to: 'authenticate#login'
       resources :accounts
     end
