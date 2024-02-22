@@ -70,7 +70,7 @@ end
 private
 
   def user_params
-    params.permit(:id, :email, :password_confirmation, :password, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at)
+    params.permit(:id, :email, :password_confirmation, :password, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at, account: [:savings_account, :investment, :earnings, :stakes])
   end
 
   def authenticate_request

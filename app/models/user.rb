@@ -3,6 +3,7 @@ class User < ApplicationRecord
     has_one :account
     before_save :set_address
     before_create :generate_account_number
+    accepts_nested_attributes_for :account
 
     def create_account
       build_account(savings_account: 0.00, investment: 0.00, earnings: 0.00, stakes: 0.00).save
