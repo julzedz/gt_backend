@@ -8,15 +8,15 @@ class User < ApplicationRecord
       build_account(savings_account: 0.00, investment: 0.00, earnings: 0.00, stakes: 0.00).save
     end
     
-  validates :email, presence: true, uniqueness: true
-  validates :password, presence: true
-  validates :first_name, presence: true
-  validates :last_name, presence: true
-  validates :date_of_birth, presence: true
-  validates :phone_number, presence: true
-  validates :city, presence: true
-  validates :state, presence: true
-  validates :country, presence: true
+  validates :email, presence: true, uniqueness: true, on: :create
+  validates :password, presence: true, on: :create
+  validates :first_name, presence: true, on: :create
+  validates :last_name, presence: true, on: :create
+  validates :date_of_birth, presence: true, on: :create
+  validates :phone_number, presence: true, on: :create
+  validates :city, presence: true, on: :create
+  validates :state, presence: true, on: :create
+  validates :country, presence: true, on: :create
 
   private
 
