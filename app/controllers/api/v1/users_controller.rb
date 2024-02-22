@@ -57,6 +57,16 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # PUT /api/v1/users/:id
+def update
+  @user = User.find(params[:id])
+  if @user.update(user_params)
+    render json: @user, include: :account, status: :ok, only: [:id, :email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+  else
+    render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+  end
+end
+
 private
 
   def user_params
