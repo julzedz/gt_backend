@@ -24,6 +24,10 @@ class Api::V1::AccountsController < ApplicationController
 
     updates = {}
 
+    if params[:new_savings_account].present?
+    updates[:savings_account] = params[:new_savings_account].to_f
+  end
+
     if params[:amount].present?
       updates[:savings_account] = @account.savings_account.to_f + params[:amount].to_f
     end
