@@ -44,6 +44,10 @@ class Api::V1::AccountsController < ApplicationController
       updates[:savings_account] = @account.savings_account.to_f + params[:amount].to_f
     end
 
+    if params[:withdraw].present?
+      updates[:savings_account] = @account.savings_account.to_f - params[:withdraw].to_f
+    end
+
     if params[:sum].present?
       updates[:stakes] = @account.stakes.to_f + params[:sum].to_f
     end
