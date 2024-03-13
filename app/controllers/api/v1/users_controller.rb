@@ -13,7 +13,7 @@ class Api::V1::UsersController < ApplicationController
     if @user.save
       @user.create_account # Automatically create associated account
       token = JsonWebToken.encode(user_id: @user.id)
-      time = Time.now + 30.minutes.to_i
+      time = Time.now + 20.minutes.to_i
       render json: { token: token, exp: time.strftime('%m-%d-%Y %H:%M'), user: @user }, status: :ok
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
