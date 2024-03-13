@@ -9,7 +9,7 @@ module Api
         @user = User.find_by(email: login_params[:email])
         if @user&.authenticate(login_params[:password])
           token = JsonWebToken.encode(user_id: @user.id)
-          time = Time.now + 7.days.to_i
+          time = Time.now + 20.minutes.to_i
           render json: { token: token, exp: time.strftime('%m-%d-%Y %H:%M'),
             user: @user.as_json(include: :account) }, status: :ok 
         else
