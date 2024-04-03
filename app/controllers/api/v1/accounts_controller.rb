@@ -25,7 +25,7 @@ class Api::V1::AccountsController < ApplicationController
     updates = {}
 
     if params[:new_savings_account].present?
-    updates[:savings_account] = params[:new_savings_account].to_f
+    updates[:savings_account] = params[:new_savings_account].to_f.round(2)
   end
 
   if params[:new_invest].present?
@@ -41,11 +41,11 @@ class Api::V1::AccountsController < ApplicationController
   end
 
     if params[:amount].present?
-      updates[:savings_account] = @account.savings_account.to_f + params[:amount].to_f
+      updates[:savings_account] = @account.savings_account.to_f.round(2) + params[:amount].to_f.round(2)
     end
 
     if params[:withdraw].present?
-      updates[:savings_account] = @account.savings_account.to_f - params[:withdraw].to_f
+      updates[:savings_account] = @account.savings_account.to_f.round(2) - params[:withdraw].to_f.round(2)
     end
 
     if params[:sum].present?
