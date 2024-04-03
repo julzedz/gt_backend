@@ -3,13 +3,8 @@ class Api::V1::AccountsController < ApplicationController
 # GET /api/v1/accounts/:id
   def show
     @account = Account.find(params[:id])
-    render json: {
-      id: @account.id,
-      savings_account: format('%.2f', @account.savings_account),
-      investment: @account.investment,
-      earnings: @account.earnings,
-      stakes: @account.stakes,
-    }
+
+    render json: @account
   end
 
 # POST /api/v1/accounts
