@@ -16,4 +16,10 @@ private
   def round_savings_account
     self.savings_account = self.savings_account.round(2)
   end
+
+  def as_json(*)
+    super.tap do |hash|
+      hash["savings_account"] = sprintf('%.2f', hash["savings_account"])
+    end
+  end
 end
