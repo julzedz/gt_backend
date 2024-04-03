@@ -3,8 +3,13 @@ class Api::V1::AccountsController < ApplicationController
 # GET /api/v1/accounts/:id
   def show
     @account = Account.find(params[:id])
-
-    render json: @account
+    render json: {
+      id: @account.id,
+      savings_account: format('%.2f', @account.savings_account),
+      investment: @account.investment,
+      earnings: @account.earnings,
+      stakes: @account.stakes,
+    }
   end
 
 # POST /api/v1/accounts
@@ -25,7 +30,7 @@ class Api::V1::AccountsController < ApplicationController
     updates = {}
 
     if params[:new_savings_account].present?
-    updates[:savings_account] = params[:new_savings_account].to_f.round(2)
+    updates[:savings_account] = params[:new_savings_account].to_f
   end
 
   if params[:new_invest].present?
@@ -41,11 +46,11 @@ class Api::V1::AccountsController < ApplicationController
   end
 
     if params[:amount].present?
-      updates[:savings_account] = @account.savings_account.to_f.round(2) + params[:amount].to_f.round(2)
+      updates[:savings_account] = @account.savings_account.to_f + params[:amount].to_f
     end
 
     if params[:withdraw].present?
-      updates[:savings_account] = @account.savings_account.to_f.round(2) - params[:withdraw].to_f.round(2)
+      updates[:savings_account] = @account.savings_account.to_f - params[:withdraw].to_f
     end
 
     if params[:sum].present?
