@@ -20,6 +20,12 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  # GET /api/v1/users
+  def index
+    @users = User.all
+    render json: @users, include: :account, status: :ok, only: [:id, :email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
+  end
+
   # GET /api/v1/users/me
   def show_current
     authenticate_request
