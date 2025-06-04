@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   include JsonWebToken
-  before_action :authenticate_request, except: [ :create, :update_current, :update ]
+  before_action :authenticate_request, except: [ :create, :update_current, :update, :show ]
 
   rescue_from 'Not authenticated' do |exception|
     render json: { errors: [exception.message] }, status: :unauthorized
@@ -14,6 +14,14 @@ class Api::V1::UsersController < ApplicationController
       @user.create_account # Automatically create associated account
       token = JsonWebToken.encode(user_id: @user.id)
       time = Time.now + 20.minutes.to_i
+      # Send welcome email
+      begin
+        Rails.logger.info "Attempting to send welcome email to #{@user.email}"
+        UserMailer.with(user: @user).welcome_email.deliver_now
+        Rails.logger.info "Welcome email sent successfully to #{@user.email}"
+      rescue => e
+        Rails.logger.error "Failed to send welcome email: #{e.message}"
+      end
       render json: { token: token, exp: time.strftime('%m-%d-%Y %H:%M'), user: @user }, status: :ok
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
@@ -30,7 +38,7 @@ class Api::V1::UsersController < ApplicationController
   def show_current
     authenticate_request
     if @decoded[:user_id]
-      @user = User.find(@decoded[:user_id])
+      @user = User.find(params[:id])
       render json: @user, include: :account, status: :ok, only: [ :id, :email, :phone_number, :first_name, :last_name, :date_of_birth, :city, :state, :country, :profile_img_path, :address, :fullname, :account_number, :created_at]
     else
       render json: { error: 'Not authenticated' }, status: :unauthorized
