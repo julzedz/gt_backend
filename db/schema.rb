@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_28_234559) do
+ActiveRecord::Schema[7.0].define(version: 2025_06_04_112107) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -73,6 +73,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_28_234559) do
     t.virtual "address", type: :text, as: "(((((city)::text || ', '::text) || (state)::text) || ', '::text) || (country)::text)", stored: true
     t.bigint "account_number"
     t.string "password_digest"
+    t.string "otp_code"
+    t.datetime "otp_sent_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
