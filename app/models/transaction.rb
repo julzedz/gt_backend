@@ -14,6 +14,13 @@ class Transaction < ApplicationRecord
     created_at.strftime("%a, %b %d, %Y %I:%M %p")
   end
 
+  # Add this to include formatted_created_at in JSON responses
+  def as_json(options = {})
+    super(options).merge(
+      formatted_created_at: formatted_created_at
+    )
+  end
+
   private
 
   def generate_reference_id
