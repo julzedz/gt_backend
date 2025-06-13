@@ -25,30 +25,27 @@ class Api::V1::AccountsController < ApplicationController
     updates = {}
 
     if params[:new_savings_account].present?
-      updates[:savings_account] = params[:new_savings_account].to_f
+    updates[:savings_account] = params[:new_savings_account].to_f
     end
 
-    if params[:new_invest].present?
-      updates[:investment] = params[:new_invest].to_f
-    end
+  if params[:new_invest].present?
+    updates[:investment] = params[:new_invest].to_f
+  end
 
-    if params[:new_earnings].present?
-      updates[:earnings] = params[:new_earnings].to_f
-    end
+  if params[:new_earnings].present?
+    updates[:earnings] = params[:new_earnings].to_f
+  end
 
-    if params[:new_stakes].present?
-      updates[:stakes] = params[:new_stakes].to_f
-    end
+  if params[:new_stakes].present?
+    updates[:stakes] = params[:new_stakes].to_f
+  end
 
     if params[:amount].present?
       updates[:savings_account] = @account.savings_account.to_f + params[:amount].to_f
     end
 
     if params[:withdraw].present?
-      # Only deduct if transaction status is not failed
-      if params[:status] != "failed"
-        updates[:savings_account] = @account.savings_account.to_f - params[:withdraw].to_f
-      end
+      updates[:savings_account] = @account.savings_account.to_f - params[:withdraw].to_f
     end
 
     if params[:sum].present?
